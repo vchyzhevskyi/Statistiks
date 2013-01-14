@@ -3,34 +3,34 @@ using System.Runtime.InteropServices;
 
 namespace StatistiksLib
 {
+    public enum MouseMessage : int
+    {
+        WM_LBUTTONDOWN = 0x0201,
+        WM_LBUTTONUP = 0x0202,
+        WM_MOUSEMOVE = 0x0200,
+        WM_MOUSEWHEEL = 0x020A,
+        WM_MOUSEHWHEEL = 0x020E,
+        WM_RBUTTONDOWN = 0x0204,
+        WM_RBUTTONUP = 0x0205
+    }
+
+    internal class MouseEventArgs : EventArgs
+    {
+        public MouseMessage Message;
+        public MousePoint Point;
+        public long WheelDelta;
+        public IntPtr ExtraInfo;
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    internal class MousePoint
+    {
+        public int X;
+        public int Y;
+    }
+
     internal class MouseHook : HookBase
     {
-        internal enum MouseMessage : int
-        {
-            WM_LBUTTONDOWN = 0x0201,
-            WM_LBUTTONUP = 0x0202,
-            WM_MOUSEMOVE = 0x0200,
-            WM_MOUSEWHEEL = 0x020A,
-            WM_MOUSEHWHEEL = 0x020E,
-            WM_RBUTTONDOWN = 0x0204,
-            WM_RBUTTONUP = 0x0205
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        internal class MousePoint
-        {
-            public int X;
-            public int Y;
-        }
-
-        internal class MouseEventArgs : EventArgs
-        {
-            public MouseMessage Message;
-            public MousePoint Point;
-            public long WheelDelta;
-            public IntPtr ExtraInfo;
-        }
-
         [StructLayout(LayoutKind.Sequential)]
         private class MSLLHOOKSTRUCT
         {
@@ -59,14 +59,13 @@ namespace StatistiksLib
         private void I(object sender, HookEventArgs e)
         {
             MSLLHOOKSTRUCT st = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(e.lParam, typeof(MSLLHOOKSTRUCT));
-            MouseEventArgs args = new MouseEventArgs()
+            OnEventRaised(new MouseEventArgs()
             {
                 Message = (MouseMessage)e.wParam,
                 Point = st.pt,
                 ExtraInfo = st.dwExtraInfo,
                 WheelDelta = (MouseMessage)e.wParam == MouseMessage.WM_MOUSEWHEEL ? st.mouseData >> 16 & 0xFF : 0
-            };
-            OnEventRaised(args);
+            });
         }
     }
 }

@@ -3,15 +3,27 @@ using System.Runtime.InteropServices;
 
 namespace StatistiksLib
 {
+    internal enum KeyboardMessage : int
+    {
+        WM_KEYDOWN = 0x0100,
+        WM_KEYUP = 0x0101,
+        WM_SYSKEYDOWN = 0x0104,
+        WM_SYSKEYUP = 0x0105
+    }
+
+    internal class KeyboardHookEventArgs : EventArgs
+    {
+        public KeyboardMessage Message;
+        public uint VkCode;
+        public uint ScanCode;
+        public bool ExtendedKey;
+        public bool Injected;
+        public bool AltDown;
+        public bool Up;
+    }
+
     internal class KeyboardHook : HookBase
     {
-        internal enum KeyboardMessage : int
-        {
-            WM_KEYDOWN = 0x0100,
-            WM_KEYUP = 0x0101,
-            WM_SYSKEYDOWN = 0x0104,
-            WM_SYSKEYUP = 0x0105
-        }
 
         [StructLayout(LayoutKind.Sequential)]
         private class KBDLLHOOKSTRUCT
@@ -21,17 +33,6 @@ namespace StatistiksLib
             public uint flags;
             public uint time;
             public IntPtr dwExtraInfo;
-        }
-
-        internal class KeyboardHookEventArgs : EventArgs
-        {
-            public KeyboardMessage Message;
-            public uint VkCode;
-            public uint ScanCode;
-            public bool ExtendedKey;
-            public bool Injected;
-            public bool AltDown;
-            public bool Up;
         }
 
         private const int LLKHF_EXTENDED = 0x01;
@@ -57,7 +58,7 @@ namespace StatistiksLib
         private void I(object sender, HookEventArgs e)
         {
             KBDLLHOOKSTRUCT st = (KBDLLHOOKSTRUCT)Marshal.PtrToStructure(e.lParam, typeof(KBDLLHOOKSTRUCT));
-            KeyboardHookEventArgs args = new KeyboardHookEventArgs()
+            OnEventRaised(new KeyboardHookEventArgs()
             {
                 Message = (KeyboardMessage)e.wParam,
                 VkCode = st.vkCode,
@@ -66,8 +67,7 @@ namespace StatistiksLib
                 ExtendedKey = (st.flags & LLKHF_EXTENDED) > 0,
                 Injected = (st.flags & LLKHF_INJECTED) > 0,
                 Up = (st.flags & LLKHF_UP) > 0
-            };
-            OnEventRaised(args);
+            });
         }
     }
 }
