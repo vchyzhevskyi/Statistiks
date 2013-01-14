@@ -50,7 +50,7 @@ namespace StatistiksLib
             Invoked += I;
         }
 
-        protected void OnEventRaised(MouseEventArgs e)
+        private void OnEventRaised(MouseEventArgs e)
         {
             if (EventRaised != null)
                 EventRaised(this, e);

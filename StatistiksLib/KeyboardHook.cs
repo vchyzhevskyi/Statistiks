@@ -48,7 +48,7 @@ namespace StatistiksLib
             Invoked += I;
         }
 
-        protected void OnEventRaised(KeyboardHookEventArgs e)
+        private void OnEventRaised(KeyboardHookEventArgs e)
         {
             if (EventRaised != null)
                 EventRaised(this, e);

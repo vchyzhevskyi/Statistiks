@@ -4,25 +4,38 @@ using System.Runtime.InteropServices;
 
 namespace StatistiksLib
 {
+    internal class HookEventArgs
+    {
+        public int code;
+        public IntPtr wParam;
+        public IntPtr lParam;
+    }
+
+    internal enum HookType : int
+    {
+        WH_KEYBOARD_LL = 13,
+        WH_MOUSE_LL = 14
+    }
+
     internal class HookBase
     {
-        private readonly HookType _hookType;
-        private readonly HookProc _hook;
+        private readonly HookType _hType;
+        private readonly HookProc _hProc;
         private readonly IntPtr _hHook;
         private delegate int HookProc(int nCode, IntPtr wParam, IntPtr lParam);
-        internal delegate void HookEventHandler(object sender, HookEventArgs e);
-        internal event HookEventHandler Invoked;
+        protected delegate void HookEventHandler(object sender, HookEventArgs e);
+        protected event HookEventHandler Invoked;
 
         internal HookBase(HookType type)
         {
-            _hookType = type;
-            _hook = new HookProc(HookProcBase);
+            _hType = type;
+            _hProc = new HookProc(HookProcBase);
             using (Process p = Process.GetCurrentProcess())
             using (ProcessModule pm = p.MainModule)
-                _hHook = SetWindowsHookEx((int)_hookType, _hook, GetModuleHandle(pm.ModuleName), 0);
+                _hHook = SetWindowsHookEx((int)_hType, _hProc, GetModuleHandle(pm.ModuleName), 0);
         }
 
-        protected void OnInvoked(HookEventArgs e)
+        private void OnInvoked(HookEventArgs e)
         {
             if (Invoked != null)
                 Invoked(this, e);
@@ -40,6 +53,11 @@ namespace StatistiksLib
             };
             OnInvoked(e);
             return CallNextHookEx(_hHook, nCode, wParam, lParam);
+        }
+
+        internal int Unhook()
+        {
+            return UnhookWindowsHookEx(_hHook);
         }
 
         #region Win32 Imports
