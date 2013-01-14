@@ -13,7 +13,7 @@ namespace StatistiksLib
         internal delegate void HookEventHandler(object sender, HookEventArgs e);
         internal event HookEventHandler Invoked;
 
-        public HookBase(HookType type)
+        internal HookBase(HookType type)
         {
             _hookType = type;
             _hook = new HookProc(HookProcBase);

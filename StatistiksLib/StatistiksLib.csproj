@@ -41,6 +41,7 @@
     <Compile Include="HookBase.cs" />
     <Compile Include="HookEventArgs.cs" />
     <Compile Include="HookType.cs" />
+    <Compile Include="MouseHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatistiksLib.cs" />
   </ItemGroup>
