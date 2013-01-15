@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Statistiks.Lib;
 using Statistiks.Report;
+using Microsoft.Win32;
 
 namespace Statistiks.App
 {
@@ -41,11 +42,21 @@ namespace Statistiks.App
             _seesionStart = DateTime.Now;
             _stLib = new StatistiksLib();
             _reportService = new Report.Report().GetReportService();
+            AutoStart();
         }
 
         private void SaveReport(string path)
         {
             _reportService.SaveReport(path, _stLib.MouseEvents, _stLib.KeyboardEvents, _stLib.WindowEvents);
+        }
+
+        private void AutoStart()
+        {
+            RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
+            if (rk.GetValue("Statistiks") != null)
+                return;
+            rk.SetValue("Statistiks", Application.ExecutablePath);
+            rk.Close();
         }
 
         private void GetReportForCurrentSession(object sender, EventArgs e)
