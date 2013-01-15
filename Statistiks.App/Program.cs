@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Statistiks.Lib;
+using Statistiks.Report;
 
 namespace Statistiks.App
 {
@@ -19,6 +21,9 @@ namespace Statistiks.App
 
         private NotifyIcon _trayIcon;
         private ContextMenu _trayMenu;
+        private StatistiksLib _stLib;
+        private IReportService _reportService;
+        private DateTime _seesionStart;
 
         public Program()
         {
@@ -32,15 +37,36 @@ namespace Statistiks.App
 
             _trayIcon.ContextMenu = _trayMenu;
             _trayIcon.Visible = true;
+
+            _seesionStart = DateTime.Now;
+            _stLib = new StatistiksLib();
+            _reportService = new Report.Report().GetReportService();
+        }
+
+        private void SaveReport(string path)
+        {
+            _reportService.SaveReport(path, _stLib.MouseEvents, _stLib.KeyboardEvents, _stLib.WindowEvents);
         }
 
         private void GetReportForCurrentSession(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            SaveFileDialog sfd = new SaveFileDialog();
+            DateTime timestamp = DateTime.Now;
+            string format = _reportService.GetType().Name.Split('R')[0];
+            sfd.Filter = string.Format("{0} Files|*.{1}", format, format.ToLower());
+            sfd.FileName = string.Format(@"{12}\{0}{1}{2}{3}{4}{5}-{6}{7}{8}{9}{10}{11}.{13}", _seesionStart.Year, _seesionStart.Month, _seesionStart.Day, _seesionStart.Hour, _seesionStart.Minute, _seesionStart.Second, timestamp.Year, timestamp.Month, timestamp.Day, timestamp.Hour, timestamp.Minute, timestamp.Second, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), format.ToLower());
+            if (sender is string && (string)sender == "OnExit")
+                SaveReport(sfd.FileName);
+            else if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                SaveReport(sfd.FileName);
+                MessageBox.Show("Report saved", "Report", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            }
         }
 
         private void OnExit(object sender, EventArgs e)
         {
+            GetReportForCurrentSession("OnExit", new EventArgs());
             Application.Exit();
         }
 

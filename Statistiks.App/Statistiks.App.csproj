@@ -72,6 +72,16 @@
   <ItemGroup>
     <Content Include="AppIcon.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Statistiks.Lib\Statistiks.Lib.csproj">
+      <Project>{21cb55dd-21eb-4393-b20e-8a5de4a00518}</Project>
+      <Name>Statistiks.Lib</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Statistiks.Report\Statistiks.Report.csproj">
+      <Project>{cfda8808-c0ad-41f8-b91c-939bb4abebc2}</Project>
+      <Name>Statistiks.Report</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
