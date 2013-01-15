@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistiks.Lib", "Statistik
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistiks.Report", "Statistiks.Report\Statistiks.Report.csproj", "{CFDA8808-C0AD-41F8-B91C-939BB4ABEBC2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Statistiks.App", "Statistiks.App\Statistiks.App.csproj", "{68687900-D5B1-49C1-9E80-450789F2412B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{CFDA8808-C0AD-41F8-B91C-939BB4ABEBC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFDA8808-C0AD-41F8-B91C-939BB4ABEBC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFDA8808-C0AD-41F8-B91C-939BB4ABEBC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{68687900-D5B1-49C1-9E80-450789F2412B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{68687900-D5B1-49C1-9E80-450789F2412B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{68687900-D5B1-49C1-9E80-450789F2412B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{68687900-D5B1-49C1-9E80-450789F2412B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
