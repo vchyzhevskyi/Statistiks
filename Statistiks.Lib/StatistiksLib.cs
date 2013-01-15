@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-namespace StatistiksLib
+
+namespace Statistiks.Lib
 {
     public class StatistiksLib
     {

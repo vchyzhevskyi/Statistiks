@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace StatistiksLib
+namespace Statistiks.Lib
 {
     internal class HookEventArgs
     {

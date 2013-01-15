@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
 
-namespace StatistiksLib
+namespace Statistiks.Lib
 {
     internal class WindowEventArgs : EventArgs
     {

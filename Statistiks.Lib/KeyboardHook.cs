@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace StatistiksLib
+namespace Statistiks.Lib
 {
     internal enum KeyboardMessage : int
     {
