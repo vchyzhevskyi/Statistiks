@@ -11,18 +11,22 @@ namespace Statistiks.Report
         {
             XDocument xDoc = new XDocument(new XDeclaration("1.0", "", ""),
                 new XElement("StatistiksReport",
-                    new XElement("Keyboard",
+                    new XElement("KeyboardEvents",
                         from x in keyboardUsage
-                        select new XElement(x.Key == 32 ? "Space" : x.Key >= 33 && x.Key <= 126 ? ((char)x.Key).ToString() : x.Key.ToString(),
-                            new XAttribute("count", x.Value))),
-                    new XElement("Mouse",
-                        from x in mouseUsage
-                        select new XElement(x.Key.ToString(),
-                            new XAttribute("count", x.Value))),
-                    new XElement("Window",
+                        select new XElement("Event",
+                            new XAttribute("Key", x.Key == 13 ? "Enter" : x.Key == 8 ? "Backspace" : x.Key == 127 ? "Delete" : x.Key == 32 ? "Space" : x.Key >= 33 && x.Key <= 126 ? ((char)x.Key).ToString() : x.Key.ToString()),
+                            new XAttribute("Count", x.Value))),
+                    new XElement("MouseEvents",
+                        from x in mouseUsage.Where(x => x.Key == MouseMessage.WM_LBUTTONUP || x.Key == MouseMessage.WM_RBUTTONUP) // only left or right mouse button events
+                        select new XElement("Event",
+                            new XAttribute("Code", x.Key.ToString()),
+                            new XAttribute("Count", x.Value))),
+                    new XElement("WindowsEvents",
                         from x in windowUsage
-                        select new XElement(x.Key.Split('\\').Last(),
-                            new XAttribute("count", x.Value)))));
+                        select new XElement("Event",
+                            new XAttribute("ExeName", x.Key.Split('\\').Last()),
+                            new XAttribute("ExePath", x.Key),
+                            new XAttribute("Count", x.Value)))));
             xDoc.Save(path);
         }
     }
