@@ -53,10 +53,13 @@ namespace Statistiks.Lib
             GetWindowText(hWnd, winCaption, winCaption.Capacity);
             uint pid = 0;
             GetWindowThreadProcessId(hWnd, out pid);
+            StringBuilder exePath = new StringBuilder(1024);
+            int size = exePath.Capacity;
+            QueryFullProcessImageName(OpenProcess(0x1000, false, (int)pid), 0, exePath, out size);
             return new Window()
             {
                 Title = winCaption.ToString(),
-                ExePath = Process.GetProcessById((int)pid).MainModule.FileName
+                ExePath = exePath.ToString()
             };
         }
 
@@ -72,6 +75,12 @@ namespace Statistiks.Lib
 
         [DllImport("user32.dll")]
         private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("kernel32.dll")]
+        private static extern IntPtr OpenProcess(int dwDesiredAccess, bool bInheritHandle, int dwProcessId);
+
+        [DllImport("kernel32.dll")]
+        private static extern bool QueryFullProcessImageName(IntPtr hProcess, int dwFlags, StringBuilder lpExeName, out int size);
         #endregion
     }
 }
