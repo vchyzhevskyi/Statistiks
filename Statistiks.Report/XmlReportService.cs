@@ -7,14 +7,14 @@ namespace Statistiks.Report
 {
     public class XmlReportService : IReportService
     {
-        public void SaveReport(string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<int, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
+        public void SaveReport(string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
         {
             XDocument xDoc = new XDocument(new XDeclaration("1.0", "", ""),
                 new XElement("StatistiksReport",
                     new XElement("KeyboardEvents",
                         from x in keyboardUsage
                         select new XElement("Event",
-                            new XAttribute("Key", x.Key == 13 ? "Enter" : x.Key == 8 ? "Backspace" : x.Key == 127 ? "Delete" : x.Key == 32 ? "Space" : x.Key >= 33 && x.Key <= 126 ? ((char)x.Key).ToString() : x.Key.ToString()),
+                            new XAttribute("Key", x.Key),
                             new XAttribute("Count", x.Value))),
                     new XElement("MouseEvents",
                         from x in mouseUsage.Where(x => x.Key == MouseMessage.WM_LBUTTONUP || x.Key == MouseMessage.WM_RBUTTONUP) // only left or right mouse button events

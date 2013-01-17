@@ -5,6 +5,6 @@ namespace Statistiks.Report
 {
     public interface IReportService
     {
-        void SaveReport(string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<int, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage);
+        void SaveReport(string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage);
     }
 }

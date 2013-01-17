@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
@@ -10,6 +9,7 @@ namespace Statistiks.Lib
     {
         public string Title;
         public string ExePath;
+        public IntPtr hWnd;
     }
 
     internal class WindowHook
@@ -23,6 +23,7 @@ namespace Statistiks.Lib
         {
             public string Title;
             public string ExePath;
+            public IntPtr hWnd;
         }
 
         public WindowHook()
@@ -42,7 +43,8 @@ namespace Statistiks.Lib
             OnEventRaised(new WindowEventArgs()
             {
                 Title = wData.Title,
-                ExePath = wData.ExePath
+                ExePath = wData.ExePath,
+                hWnd = wData.hWnd
             });
         }
 
@@ -59,8 +61,14 @@ namespace Statistiks.Lib
             return new Window()
             {
                 Title = winCaption.ToString(),
-                ExePath = exePath.ToString()
+                ExePath = exePath.ToString(),
+                hWnd = hWnd
             };
+        }
+
+        internal void Unhook()
+        {
+            _tTimer = null;
         }
 
         #region Win32 Imports

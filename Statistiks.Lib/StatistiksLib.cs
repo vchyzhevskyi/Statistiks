@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Statistiks.Lib
 {
@@ -9,23 +11,24 @@ namespace Statistiks.Lib
         private WindowHook _wHook;
 
         #region Data
-        private Dictionary<int, ulong> _keyboardEvents;
+        private Dictionary<string, ulong> _keyboardEvents;
         private Dictionary<MouseMessage, ulong> _mouseEvents;
         private Dictionary<string, ulong> _windowEvents;
+        private IntPtr _activeWindow;
         #endregion
 
         #region Properties
-        public Dictionary<int, ulong> KeyboardEvents { get { return _keyboardEvents; } }
+        public Dictionary<string, ulong> KeyboardEvents { get { return _keyboardEvents; } }
         public Dictionary<MouseMessage, ulong> MouseEvents { get { return _mouseEvents; } }
         public Dictionary<string, ulong> WindowEvents { get { return _windowEvents; } }
         #endregion
 
         public StatistiksLib()
         {
-            _keyboardEvents = new Dictionary<int, ulong>();
+            _keyboardEvents = new Dictionary<string, ulong>();
             _mouseEvents = new Dictionary<MouseMessage, ulong>();
             _windowEvents = new Dictionary<string, ulong>();
-
+            _activeWindow = IntPtr.Zero;
             _kHook = new KeyboardHook();
             _kHook.EventRaised += _kHookEventRaised;
             _mHook = new MouseHook();
@@ -36,6 +39,7 @@ namespace Statistiks.Lib
 
         private void _wHookEventRaised(object sender, WindowEventArgs e)
         {
+            _activeWindow = e.hWnd;
             if (_windowEvents.ContainsKey(e.ExePath))
                 _windowEvents[e.ExePath] += 1;
             else
@@ -52,16 +56,21 @@ namespace Statistiks.Lib
 
         private void _kHookEventRaised(object sender, KeyboardHookEventArgs e)
         {
-            if (e.Up && _keyboardEvents.ContainsKey((int)e.VkCode))
-                _keyboardEvents[(int)e.VkCode] += 1;
-            else if (e.Up)
-                _keyboardEvents.Add((int)e.VkCode, 1);
+            if (e.Message == KeyboardMessage.WM_KEYDOWN || e.Message == KeyboardMessage.WM_SYSKEYDOWN)
+            {
+                var key = e.VkCode.KeyCodeToUnicodeString(e.ScanCode, _activeWindow, _keyboardEvents.Keys.Skip(_keyboardEvents.Count - 3).Take(3).ToArray());
+                if (_keyboardEvents.ContainsKey(key))
+                    _keyboardEvents[key] += 1;
+                else
+                    _keyboardEvents.Add(key, 1);
+            }
         }
 
         public void Unhook()
         {
             _kHook.Unhook();
             _mHook.Unhook();
+            _wHook.Unhook();
         }
     }
 }

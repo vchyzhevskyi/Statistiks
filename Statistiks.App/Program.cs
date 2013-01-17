@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
+﻿using Microsoft.Win32;
 using Statistiks.Lib;
 using Statistiks.Report;
-using Microsoft.Win32;
+using System;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Statistiks.App
 {
@@ -77,6 +75,7 @@ namespace Statistiks.App
 
         private void OnExit(object sender, EventArgs e)
         {
+            _stLib.Unhook();
             GetReportForCurrentSession("OnExit", new EventArgs());
             Application.Exit();
         }

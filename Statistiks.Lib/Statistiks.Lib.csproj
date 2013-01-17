@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions.cs" />
     <Compile Include="HookBase.cs" />
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="MouseHook.cs" />
