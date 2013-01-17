@@ -28,6 +28,7 @@ namespace Statistiks.App
         {
             _trayMenu = new ContextMenu();
             _trayMenu.MenuItems.Add("Get report for current session", GetReportForCurrentSession);
+            _trayMenu.MenuItems.Add("About", About);
             _trayMenu.MenuItems.Add("Quit", OnExit);
 
             _trayIcon = new NotifyIcon();
@@ -41,6 +42,11 @@ namespace Statistiks.App
             _stLib = new StatistiksLib();
             _reportService = new Report.Report().GetReportService();
             AutoStart();
+        }
+
+        private void About(object sender, EventArgs e)
+        {
+            new AboutForm().Show();
         }
 
         private void SaveReport(string path)
