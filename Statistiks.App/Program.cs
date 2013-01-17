@@ -3,6 +3,7 @@ using Statistiks.Lib;
 using Statistiks.Report;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Statistiks.App
@@ -58,7 +59,10 @@ namespace Statistiks.App
         {
             RegistryKey rk = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", true);
             if (rk.GetValue("Statistiks") != null)
+            {
+                rk.Close();
                 return;
+            }
             rk.SetValue("Statistiks", Application.ExecutablePath);
             rk.Close();
         }
@@ -69,10 +73,17 @@ namespace Statistiks.App
             DateTime timestamp = DateTime.Now;
             string format = _reportService.GetType().Name.Split('R')[0];
             sfd.Filter = string.Format("{0} Files|*.{1}", format, format.ToLower());
-            sfd.FileName = string.Format(@"{12}\{0}{1}{2}{3}{4}{5}-{6}{7}{8}{9}{10}{11}.{13}", _seesionStart.Year, _seesionStart.Month, _seesionStart.Day, _seesionStart.Hour, _seesionStart.Minute, _seesionStart.Second, timestamp.Year, timestamp.Month, timestamp.Day, timestamp.Hour, timestamp.Minute, timestamp.Second, Environment.GetFolderPath(Environment.SpecialFolder.Desktop), format.ToLower());
             if (sender is string && (string)sender == "OnExit")
+            {
+                var AppDataPath = string.Format(@"{0}\{1}", Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Statistiks");
+                if (!Directory.Exists(AppDataPath))
+                    Directory.CreateDirectory(AppDataPath);
+                sfd.FileName = string.Format(@"{0}\{1}-{2}.{3}", AppDataPath, _seesionStart.ToString("yyyyMMddHHmmss"), timestamp.ToString("yyyyMMddHHmmss"), format.ToLower());
                 SaveReport(sfd.FileName);
-            else if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                return;
+            }
+            sfd.FileName = string.Format(@"{0}\{1}-{2}.{3}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), _seesionStart.ToString("yyyyMMddHHmmss"), timestamp.ToString("yyyyMMddHHmmss"), format.ToLower());
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 SaveReport(sfd.FileName);
                 MessageBox.Show("Report saved", "Report", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
