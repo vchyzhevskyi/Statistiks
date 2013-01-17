@@ -1,0 +1,1 @@
+# Statistiks**Statistiks** is a Windows desktop software, the main goal of which is collect usage statistics of keyboard, mouse and foreground windows.## Changelog * 0.1.1.1  * Support for keyboard, mouse and foreground window change events  * Export statistics as XML file  * Application auto start on user logon
