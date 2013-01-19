@@ -16,7 +16,9 @@ namespace Statistiks.App
         [STAThread]
         static void Main()
         {
-            Application.Run(new Program());
+            var prog = new Program();
+            SystemEvents.SessionEnding += prog.OnExit;
+            Application.Run(prog);
         }
 
         private NotifyIcon _trayIcon;
@@ -50,9 +52,9 @@ namespace Statistiks.App
             new AboutForm().Show();
         }
 
-        private void SaveReport(string path)
+        private void SaveReport(DateTime sessionEnd, string path)
         {
-            _reportService.SaveReport(path, _stLib.MouseEvents, _stLib.KeyboardEvents, _stLib.WindowEvents);
+            _reportService.SaveReport(_seesionStart, sessionEnd, path, _stLib.MouseEvents, _stLib.KeyboardEvents, _stLib.WindowEvents);
         }
 
         private void AutoStart()
@@ -79,13 +81,13 @@ namespace Statistiks.App
                 if (!Directory.Exists(AppDataPath))
                     Directory.CreateDirectory(AppDataPath);
                 sfd.FileName = string.Format(@"{0}\{1}-{2}.{3}", AppDataPath, _seesionStart.ToString("yyyyMMddHHmmss"), timestamp.ToString("yyyyMMddHHmmss"), format.ToLower());
-                SaveReport(sfd.FileName);
+                SaveReport(timestamp, sfd.FileName);
                 return;
             }
             sfd.FileName = string.Format(@"{0}\{1}-{2}.{3}", Environment.GetFolderPath(Environment.SpecialFolder.Desktop), _seesionStart.ToString("yyyyMMddHHmmss"), timestamp.ToString("yyyyMMddHHmmss"), format.ToLower());
             if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                SaveReport(sfd.FileName);
+                SaveReport(timestamp, sfd.FileName);
                 MessageBox.Show("Report saved", "Report", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
         }

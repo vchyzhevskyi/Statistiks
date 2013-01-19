@@ -1,4 +1,5 @@
 ﻿using Statistiks.Lib;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
@@ -7,12 +8,14 @@ namespace Statistiks.Report
 {
     public class XmlReportService : IReportService
     {
-        public void SaveReport(string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
+        public void SaveReport(DateTime sessionStart, DateTime sessionEnd, string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
         {
             XDocument xDoc = new XDocument(new XDeclaration("1.0", "", ""),
                 new XElement("StatistiksReport",
+                    new XAttribute("SessionStart", sessionStart.ToString("yyyyMMddHHmmss")),
+                    new XAttribute("SessionEnd", sessionEnd.ToString("yyyyMMddHHmmss")),
                     new XElement("KeyboardEvents",
-                        from x in keyboardUsage
+                        from x in keyboardUsage.Where(x => ((int)x.Key[0]).IsValidXmlChar())
                         select new XElement("Event",
                             new XAttribute("Key", x.Key),
                             new XAttribute("Count", x.Value))),

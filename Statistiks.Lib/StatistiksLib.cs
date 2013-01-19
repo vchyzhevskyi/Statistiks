@@ -59,6 +59,8 @@ namespace Statistiks.Lib
             if (e.Message == KeyboardMessage.WM_KEYDOWN || e.Message == KeyboardMessage.WM_SYSKEYDOWN)
             {
                 var key = e.VkCode.KeyCodeToUnicodeString(e.ScanCode, _activeWindow, _keyboardEvents.Keys.Skip(_keyboardEvents.Count - 3).Take(3).ToArray());
+                if (key == "RButton" || key == "LButton" || key == "MButton" || key == "XButton1" || key == "XButton2")
+                    return; // TODO: decide what need to do with mouse keys
                 if (_keyboardEvents.ContainsKey(key))
                     _keyboardEvents[key] += 1;
                 else
