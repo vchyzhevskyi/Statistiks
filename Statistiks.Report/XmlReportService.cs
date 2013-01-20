@@ -8,10 +8,10 @@ namespace Statistiks.Report
 {
     public class XmlReportService : IReportService
     {
-        public void SaveReport(DateTime sessionStart, DateTime sessionEnd, string path, Dictionary<MouseMessage, ulong> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
+        public void SaveReport(DateTime sessionStart, DateTime sessionEnd, string path, Dictionary<MouseMessage, double> mouseUsage, Dictionary<string, ulong> keyboardUsage, Dictionary<string, ulong> windowUsage)
         {
             XDocument xDoc = new XDocument(new XDeclaration("1.0", "", ""),
-                new XElement("StatistiksReport",
+                new XElement("Report",
                     new XAttribute("SessionStart", sessionStart.ToString("yyyyMMddHHmmss")),
                     new XAttribute("SessionEnd", sessionEnd.ToString("yyyyMMddHHmmss")),
                     new XElement("KeyboardEvents",
@@ -20,10 +20,10 @@ namespace Statistiks.Report
                             new XAttribute("Key", x.Key),
                             new XAttribute("Count", x.Value))),
                     new XElement("MouseEvents",
-                        from x in mouseUsage.Where(x => x.Key == MouseMessage.WM_LBUTTONUP || x.Key == MouseMessage.WM_RBUTTONUP) // only left or right mouse button events
+                        from x in mouseUsage.Where(x => x.Key == MouseMessage.WM_LBUTTONUP || x.Key == MouseMessage.WM_RBUTTONUP || x.Key == MouseMessage.WM_MOUSEMOVE) // only left or right mouse button events or path length of mouse move in cm
                         select new XElement("Event",
                             new XAttribute("Code", x.Key.ToString()),
-                            new XAttribute("Count", x.Value))),
+                            new XAttribute("Count", x.Key == MouseMessage.WM_MOUSEMOVE ? Math.Round(x.Value, 2) : (ulong)x.Value))),
                     new XElement("WindowsEvents",
                         from x in windowUsage
                         select new XElement("Event",

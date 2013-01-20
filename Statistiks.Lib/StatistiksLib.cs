@@ -12,21 +12,21 @@ namespace Statistiks.Lib
 
         #region Data
         private Dictionary<string, ulong> _keyboardEvents;
-        private Dictionary<MouseMessage, ulong> _mouseEvents;
+        private Dictionary<MouseMessage, double> _mouseEvents;
         private Dictionary<string, ulong> _windowEvents;
         private IntPtr _activeWindow;
         #endregion
 
         #region Properties
         public Dictionary<string, ulong> KeyboardEvents { get { return _keyboardEvents; } }
-        public Dictionary<MouseMessage, ulong> MouseEvents { get { return _mouseEvents; } }
+        public Dictionary<MouseMessage, double> MouseEvents { get { return _mouseEvents; } }
         public Dictionary<string, ulong> WindowEvents { get { return _windowEvents; } }
         #endregion
 
         public StatistiksLib()
         {
             _keyboardEvents = new Dictionary<string, ulong>();
-            _mouseEvents = new Dictionary<MouseMessage, ulong>();
+            _mouseEvents = new Dictionary<MouseMessage, double>();
             _windowEvents = new Dictionary<string, ulong>();
             _activeWindow = IntPtr.Zero;
             _kHook = new KeyboardHook();
@@ -49,9 +49,9 @@ namespace Statistiks.Lib
         private void _mHookEventRaised(object sender, MouseEventArgs e)
         {
             if (_mouseEvents.ContainsKey(e.Message))
-                _mouseEvents[e.Message] += 1;
+                _mouseEvents[e.Message] += e.Message == MouseMessage.WM_MOUSEMOVE ? e.MovePath : 1;
             else
-                _mouseEvents.Add(e.Message, 1);
+                _mouseEvents.Add(e.Message, e.Message == MouseMessage.WM_MOUSEMOVE ? e.MovePath : 1);
         }
 
         private void _kHookEventRaised(object sender, KeyboardHookEventArgs e)
