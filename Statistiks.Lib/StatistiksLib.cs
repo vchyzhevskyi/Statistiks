@@ -40,6 +40,7 @@ namespace Statistiks.Lib
         private void _wHookEventRaised(object sender, WindowEventArgs e)
         {
             _activeWindow = e.hWnd;
+            e.ExePath = string.IsNullOrEmpty(e.ExePath) ? "LockScreen" : e.ExePath;
             if (_windowEvents.ContainsKey(e.ExePath))
                 _windowEvents[e.ExePath] += 1;
             else
