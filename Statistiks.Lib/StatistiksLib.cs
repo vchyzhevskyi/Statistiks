@@ -9,6 +9,7 @@ namespace Statistiks.Lib
         private KeyboardHook _kHook;
         private MouseHook _mHook;
         private WindowHook _wHook;
+        private ScreenshotTaker _scrshtTkr;
 
         #region Data
         private Dictionary<string, ulong> _keyboardEvents;
@@ -35,6 +36,7 @@ namespace Statistiks.Lib
             _mHook.EventRaised += _mHookEventRaised;
             _wHook = new WindowHook();
             _wHook.EventRaised += _wHookEventRaised;
+            _scrshtTkr = new ScreenshotTaker(900000); // todo configuration to implement
         }
 
         private void _wHookEventRaised(object sender, WindowEventArgs e)
@@ -74,6 +76,7 @@ namespace Statistiks.Lib
             _kHook.Unhook();
             _mHook.Unhook();
             _wHook.Unhook();
+            _scrshtTkr.Stop();
         }
     }
 }
