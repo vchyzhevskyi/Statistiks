@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Linq;
 using System.Windows.Forms;
 using Timer = System.Threading.Timer;
 
@@ -20,10 +21,10 @@ namespace Statistiks.Lib
         {
             try
             {
-                var scrsht = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+                var scrsht = new Bitmap(Screen.AllScreens.Sum(x=>x.Bounds.Width), Screen.AllScreens.Max(x=>x.Bounds.Height));
                 Graphics.FromImage(scrsht)
                         .CopyFromScreen(0, 0, 0, 0,
-                                        new Size(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height));
+                                        new Size(Screen.AllScreens.Sum(x => x.Bounds.Width), Screen.AllScreens.Max(x => x.Bounds.Height)));
                 if (
                     !Directory.Exists(string.Format(@"{0}\Statistiks\Screenshots\",
                                                     Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData))))
