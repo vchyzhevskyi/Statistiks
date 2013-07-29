@@ -32,8 +32,6 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions.cs" />
@@ -41,9 +39,15 @@
     <Compile Include="KeyboardHook.cs" />
     <Compile Include="MouseHook.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScreenshotTaker.cs" />
     <Compile Include="StatistiksLib.cs" />
+    <Compile Include="ScreenshotTaker.cs" />
     <Compile Include="WindowHook.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Statistiks.Configuration\Statistiks.Configuration.csproj">
+      <Project>{AD1E0E58-C77E-4B51-82DD-37A766CD8047}</Project>
+      <Name>Statistiks.Configuration</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

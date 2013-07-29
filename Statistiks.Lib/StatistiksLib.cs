@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Config = Statistiks.Configuration.Configuration;
 
 namespace Statistiks.Lib
 {
     public class StatistiksLib
     {
-        private KeyboardHook _kHook;
-        private MouseHook _mHook;
-        private WindowHook _wHook;
         private ScreenshotTaker _scrshtTkr;
+        private KeyboardHook _keyboardHook;
+        private MouseHook _mouseHook;
+        private WindowHook _windowHook;
 
         #region Data
         private Dictionary<string, ulong> _keyboardEvents;
@@ -26,17 +27,29 @@ namespace Statistiks.Lib
 
         public StatistiksLib()
         {
-            _keyboardEvents = new Dictionary<string, ulong>();
-            _mouseEvents = new Dictionary<MouseMessage, double>();
-            _windowEvents = new Dictionary<string, ulong>();
-            _activeWindow = IntPtr.Zero;
-            _kHook = new KeyboardHook();
-            _kHook.EventRaised += _kHookEventRaised;
-            _mHook = new MouseHook();
-            _mHook.EventRaised += _mHookEventRaised;
-            _wHook = new WindowHook();
-            _wHook.EventRaised += _wHookEventRaised;
-            _scrshtTkr = new ScreenshotTaker(900000); // todo configuration to implement
+            if (Config.Instance.KeyboardCapturingEnabled)
+            {
+                _keyboardEvents = new Dictionary<string, ulong>();
+                _keyboardHook = new KeyboardHook();
+                _keyboardHook.EventRaised += _kHookEventRaised;
+            }
+            if (Config.Instance.MouseCapturingEnabled)
+            {
+                _mouseEvents = new Dictionary<MouseMessage, double>();
+                _mouseHook = new MouseHook();
+                _mouseHook.EventRaised += _mHookEventRaised;
+            }
+            if (Config.Instance.WindowCapturingEnabled)
+            {
+                _windowEvents = new Dictionary<string, ulong>();
+                _activeWindow = IntPtr.Zero;
+                _windowHook = new WindowHook();
+                _windowHook.EventRaised += _wHookEventRaised;
+            }
+            if (Config.Instance.ScreenshotTakerEnabled)
+            {
+                _scrshtTkr = new ScreenshotTaker(900000);
+            }
         }
 
         private void _wHookEventRaised(object sender, WindowEventArgs e)
@@ -73,10 +86,10 @@ namespace Statistiks.Lib
 
         public void Unhook()
         {
-            _kHook.Unhook();
-            _mHook.Unhook();
-            _wHook.Unhook();
             _scrshtTkr.Stop();
+            _keyboardHook.Unhook();
+            _mouseHook.Unhook();
+            _windowHook.Unhook();
         }
     }
 }
