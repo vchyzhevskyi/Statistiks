@@ -1,18 +1,15 @@
-﻿using Microsoft.Win32;
-using Statistiks.Lib;
-using Statistiks.Report;
-using System;
+﻿using System;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Microsoft.Win32;
+using Statistiks.Lib;
+using Statistiks.Report;
 
 namespace Statistiks.App
 {
     public class Program : Form
     {
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {

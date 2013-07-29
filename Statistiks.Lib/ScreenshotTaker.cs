@@ -21,7 +21,7 @@ namespace Statistiks.Lib
         {
             try
             {
-                var scrsht = new Bitmap(Screen.AllScreens.Sum(x=>x.Bounds.Width), Screen.AllScreens.Max(x=>x.Bounds.Height));
+                var scrsht = new Bitmap(Screen.AllScreens.Sum(x => x.Bounds.Width), Screen.AllScreens.Max(x => x.Bounds.Height));
                 Graphics.FromImage(scrsht)
                         .CopyFromScreen(0, 0, 0, 0,
                                         new Size(Screen.AllScreens.Sum(x => x.Bounds.Width), Screen.AllScreens.Max(x => x.Bounds.Height)));

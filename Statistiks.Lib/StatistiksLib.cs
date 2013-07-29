@@ -7,7 +7,7 @@ namespace Statistiks.Lib
 {
     public class StatistiksLib
     {
-        private ScreenshotTaker _scrshtTkr;
+        private ScreenshotTaker _screenshotTaker;
         private KeyboardHook _keyboardHook;
         private MouseHook _mouseHook;
         private WindowHook _windowHook;
@@ -48,7 +48,7 @@ namespace Statistiks.Lib
             }
             if (Config.Instance.ScreenshotTakerEnabled)
             {
-                _scrshtTkr = new ScreenshotTaker(900000);
+                _screenshotTaker = new ScreenshotTaker(900000);
             }
         }
 
@@ -86,10 +86,22 @@ namespace Statistiks.Lib
 
         public void Unhook()
         {
-            _scrshtTkr.Stop();
-            _keyboardHook.Unhook();
-            _mouseHook.Unhook();
-            _windowHook.Unhook();
+            if (Config.Instance.ScreenshotTakerEnabled)
+            {
+                _screenshotTaker.Stop();
+            }
+            if (Config.Instance.KeyboardCapturingEnabled)
+            {
+                _keyboardHook.Unhook();
+            }
+            if (Config.Instance.MouseCapturingEnabled)
+            {
+                _mouseHook.Unhook();
+            }
+            if (Config.Instance.WindowCapturingEnabled)
+            {
+                _windowHook.Unhook();
+            }
         }
     }
 }

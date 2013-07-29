@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
-using Config = Statistiks.Configuration.Configuration;
 using Statistiks.Lib;
+using Config = Statistiks.Configuration.Configuration;
 
 namespace Statistiks.Report
 {
